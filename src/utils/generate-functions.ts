@@ -127,7 +127,7 @@ export async function generateFunctions(operationType: 'mutation' | 'query', enu
             returnName.includes('number') ||
             returnName.includes('string') ||
             returnName.includes('boolean') ||
-            enums.includes(`export enum ${returnName}`)
+            enums.includes(`export enum ${returnName} {`)
         ) {
             allowFields = false;
         }
@@ -137,7 +137,9 @@ export async function generateFunctions(operationType: 'mutation' | 'query', enu
         const functionString = `async ${field.name}({${readyToUseArgs.length ? 'args,' : ''} ${
             allowFields ? 'fields, ' : ''
         } headers}:{${readyToUseArgs.length ? `args${ifArgsRequired ? '' : '?'}: ${argObjectName},` : ''} ${
-            allowFields ? `fields:Partial<Record<keyof ${returnName.replace('[]', '')},boolean>>,` : ''
+            allowFields
+                ? `fields:((keyof ${returnName.replace('[]', '')}) | Partial<Record<keyof ${returnName},any[]>>)[],`
+                : ''
         } headers?:HeadersInit}${!readyToUseArgs.length && !allowFields ? '={}' : ''}):Promise<${returnName}>{ 
             if(!headers) headers = {};
             return this.gql_request(gql\`
@@ -146,7 +148,7 @@ export async function generateFunctions(operationType: 'mutation' | 'query', enu
                         ${
                             allowFields
                                 ? `{
-                            \${Object.keys(fields).join(',')}
+                            \${buildGraphQLQuery(fields)}
                         }`
                                 : ''
                         }

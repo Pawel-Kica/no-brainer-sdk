@@ -24,15 +24,38 @@ async function compileAll() {
     const imports = "import { gql, GraphQLClient, RequestDocument, Variables } from 'graphql-request';" + '\n';
 
     const classWrapper = ` 
-    export class SdkClient{
+        export function buildGraphQLQuery(fields) {
+            const queryFields = fields.map((field) => {
+                if (typeof field === 'string') {
+                    return field;
+                } else if (typeof field === 'object') {
+                    const [key, subFields] = Object.entries(field)[0];
+                    const subQuery = buildGraphQLQuery(subFields);
+                    return \`\${key} { \${subQuery} }\`;
+                }
+            });
+
+            return queryFields.join(' ');
+        }
+
+    export class SdkClient {
         private gql_client: GraphQLClient;
+        private global_headers: {[x: string]: string} = {};
 
         constructor(endpoint: string) {
             this.gql_client = new GraphQLClient(endpoint);
         }
 
+        setGlobalCustomHeader(header_name: string, value: any): void {
+            this.global_headers[header_name] = value;
+        }
+
+        setGlobalAuthToken(token: string): void {
+            this.global_headers['authorization'] = \`Bearer \${token}\`;
+        }
+
         async gql_request(document: RequestDocument, variables?: Variables, requestHeaders?: HeadersInit, name?: string) {
-            return this.gql_client.request(document, variables, requestHeaders).then((res) => {
+            return this.gql_client.request(document, variables, {...this.global_headers, ...requestHeaders}).then((res) => {
                 if (name) return res[name];
                 return res;
             });
@@ -41,7 +64,10 @@ async function compileAll() {
         ${mutations.functions}
 
         ${queries.functions}
-    }`;
+    }
+    
+    export const SdkClientInstance = new SdkClient('${args[0]}');
+    `;
 
     mkdirSync(dirname(destinationPath), {recursive: true});
     await writeFile(destinationPath, [imports, enums, parents, mutations.args, queries.args, classWrapper].join('\n'));
