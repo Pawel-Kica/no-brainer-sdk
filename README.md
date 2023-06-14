@@ -1,4 +1,4 @@
-# No-Brainer SDK Builder
+# No-Brainer SDK Builder 😎
 
 The No-Brainer SDK Builder is a tool that generates an SDK based on a GraphQL schema. It simplifies the process of interacting with a GraphQL API by automatically creating TypeScript types and client methods for queries and mutations.
 
@@ -19,35 +19,31 @@ Once you have generated the SDK, you can start using it in your project. Here's 
 ```typescript
 import { SdkClient, SdkClientInstance, CreateCriticalTaskArgs, CriticalTaskStatus } from '../types/sdk-types';
 
-const main = async () => {
-  const client = new SdkClient('http://localhost:3001/graphql');
-  // Alternatively, you can use the pre-configured instance
-  SdkClientInstance; // Ready with the configured endpoint
+const client = new SdkClient('http://localhost:3001/graphql');
+// Alternatively, you can use the pre-configured instance
+SdkClientInstance; // Ready with the configured endpoint
 
-  client.setGlobalAuthToken('jwt'); // Sets Authorization header
-  client.setGlobalCustomHeader('custom-header', 'custom-value');
+client.setGlobalAuthToken('jwt'); // Sets Authorization header
+client.setGlobalCustomHeader('custom-header', 'custom-value');
 
-  // Specify normal fields, or nested ones with object {}
-  await client.user({ fields: ['user_id', { sessions: ['id', 'session_id'] }] });
+// Specify normal fields, or nested ones with object {}
+await client.user({ fields: ['user_id', { sessions: ['id', 'session_id'] }] });
 
-  const args: CreateCriticalTaskArgs = {
+const args: CreateCriticalTaskArgs = {
     title: 'test',
     date: '2020-01-01',
-  };
+};
 
-  // Queries and mutations map to functions, with strict types safety
-  const task = await client.create_critical_task({
+// Queries and mutations map to functions, with strict types safety
+const task = await client.create_critical_task({
     args,
     fields: ['id'],
     headers: { 'custom-header': 'override' },
-  });
+});
 
-  if (task.status === CriticalTaskStatus.win) {
+if (task.status === CriticalTaskStatus.win) {
     console.log('You won!');
-  }
-};
-
-main();
+}
 ```
 
 In this example, the generated SDK allows you to perform GraphQL queries and mutations. You can customize request headers, set global authentication tokens, and access auto-generated methods for specific queries and mutations.
@@ -88,7 +84,7 @@ export const SdkClientInstance = new SdkClient('http://localhost:3001/graphql');
 
 ## Enjoy 🚀🚀🚀
 
-I appreciate all the improvements ideas, feel free to create a pull request or just contact me.
+I appreciate all ideas for improvement, feel free to create a pull request or just contact me.
 
 
 <h3 align="center">Reach me out on</h3>
