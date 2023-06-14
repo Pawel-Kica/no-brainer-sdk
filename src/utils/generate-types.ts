@@ -1,6 +1,6 @@
 import {gql, GraphQLClient} from 'graphql-request';
-import {ITypeKind, __Field, __Type} from './types/schema.types';
-import {handleSpecificKindHandler} from './utils/helpers';
+import {ITypeKind, __Field, __Type} from '../types/schema.types';
+import {handleSpecificKindHandler} from './helpers';
 
 export async function generateTypes(client: GraphQLClient) {
     const query = gql`

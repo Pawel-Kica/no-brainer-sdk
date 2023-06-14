@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "description": "No Brainer SDK",
   "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "rm -rf ./dist && tsc",
     "test": "jest",
-    "gen-sdk-types":"node dist/compile.js"
+    "start":"ts-node dist/index.js"
   },
+  "bin": "./dist/index.js",
   "keywords": [],
-  "author": "",
+  "author": "Pawel-Kica",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.19.3",
@@ -33,3 +33,5 @@
     "type": "git"
   }
 }
+
+

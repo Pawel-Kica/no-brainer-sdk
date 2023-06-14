@@ -1,9 +1,55 @@
-import {GraphQLClient, gql} from 'graphql-request';
+#!/usr/bin/env node
+import {mkdirSync} from 'fs';
+import {generateFunctions} from './utils/generate-functions';
+import {generateTypes} from './utils/generate-types';
+import {GraphQLClient} from 'graphql-request';
+import {dirname} from 'path';
+import {writeFile} from 'fs/promises';
 
-export class GqlClient {
-    private gql_client: GraphQLClient;
+async function compileAll() {
+    const args = process.argv.slice(2);
 
-    constructor(endpoint: string) {
-        this.gql_client = new GraphQLClient(endpoint);
+    if (args.length < 1) {
+        console.log('Please provide endpoint as argument');
+        return;
     }
+    let destinationPath = args[1] || './sdk-types.ts';
+
+    const client = new GraphQLClient(args[0]);
+
+    const {enums, parents} = await generateTypes(client);
+    const mutations = await generateFunctions('mutation', enums, client);
+    const queries = await generateFunctions('query', enums, client);
+
+    const imports = "import { gql, GraphQLClient, RequestDocument, Variables } from 'graphql-request';" + '\n';
+
+    const classWrapper = ` 
+    export class SdkClient{
+        private gql_client: GraphQLClient;
+
+        constructor(endpoint: string) {
+            this.gql_client = new GraphQLClient(endpoint);
+        }
+
+        async gql_request(document: RequestDocument, variables?: Variables, requestHeaders?: HeadersInit, name?: string) {
+            return this.gql_client.request(document, variables, requestHeaders).then((res) => {
+                if (name) return res[name];
+                return res;
+            });
+        }
+
+        ${mutations.functions}
+
+        ${queries.functions}
+    }`;
+
+    mkdirSync(dirname(destinationPath), {recursive: true});
+    await writeFile(destinationPath, [imports, enums, parents, mutations.args, queries.args, classWrapper].join('\n'));
+
+    if (destinationPath.startsWith('./')) destinationPath = destinationPath.slice(2); // remove leading ./
+    console.log('Types compiled, absolute path: ' + process.cwd() + '/' + destinationPath);
+}
+
+if (require.main === module) {
+    compileAll();
 }

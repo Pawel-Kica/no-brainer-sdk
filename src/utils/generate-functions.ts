@@ -1,6 +1,6 @@
-import {ITypeKind, __Field, __Type} from './types/schema.types';
+import {ITypeKind, __Field, __Type} from '../types/schema.types';
 import {gql, GraphQLClient} from 'graphql-request';
-import {countOccurrences, handleSpecificKindHandler} from './utils/helpers';
+import {countOccurrences, handleSpecificKindHandler} from './helpers';
 
 const createArgsName = (name: string) => {
     return (
