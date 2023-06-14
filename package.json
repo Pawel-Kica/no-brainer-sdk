@@ -1,12 +1,12 @@
 {
   "name": "no-brainer-sdk",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "No Brainer SDK",
   "main": "./dist/index.js",
   "scripts": {
     "build": "rm -rf ./dist && tsc",
     "test": "jest",
-    "start":"ts-node dist/index.js"
+    "start": "ts-node dist/index.js"
   },
   "bin": "./dist/index.js",
   "keywords": [],
@@ -33,5 +33,3 @@
     "type": "git"
   }
 }
-
-
