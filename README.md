@@ -35,6 +35,7 @@ const main = async () => {
     date: '2020-01-01',
   };
 
+  // Queries and mutations map to functions, with strict types safety
   const task = await client.create_critical_task({
     args,
     fields: ['id'],
