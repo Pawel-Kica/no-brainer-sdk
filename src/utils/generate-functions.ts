@@ -137,9 +137,7 @@ export async function generateFunctions(operationType: 'mutation' | 'query', enu
         const functionString = `async ${field.name}({${readyToUseArgs.length ? 'args,' : ''} ${
             allowFields ? 'fields, ' : ''
         } headers}:{${readyToUseArgs.length ? `args${ifArgsRequired ? '' : '?'}: ${argObjectName},` : ''} ${
-            allowFields
-                ? `fields:((keyof ${returnName.replace('[]', '')}) | Partial<Record<keyof ${returnName},any[]>>)[],`
-                : ''
+            allowFields ? `fields:Partial<Record<keyof ${returnName},boolean>>)[],` : ''
         } headers?:HeadersInit}${!readyToUseArgs.length && !allowFields ? '={}' : ''}):Promise<${returnName}>{ 
             if(!headers) headers = {};
             return this.gql_request(gql\`

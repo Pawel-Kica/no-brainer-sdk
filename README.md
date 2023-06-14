@@ -55,7 +55,7 @@ In this example, the generated SDK allows you to perform GraphQL queries and mut
 
 It's just an example, of what structures SDK generates
 
-```
+```typescript
 export type QueryType = 'user' | 'user_power_list';
 
 export type MutationType = 'create_critical_task' | 'update_critical_task';
@@ -86,4 +86,17 @@ export const SdkClientInstance = new SdkClient('http://localhost:3001/graphql');
 ```
 
 ## Enjoy 🚀🚀🚀
+
+I appreciate all the improvements ideas, feel free to create a pull request or just contact me.
+
+
+<h3 align="center">Reach me out on</h3>
+  <p align="center">
+   <a href="https://github.com/Pawel-Kica" target="_blank"><img alt="Gmail" src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" />
+   <a href="mailto: pawel.kica.cc@gmail.com" target="_blank"><img alt="Gmail" src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" />
+   <a href="https://www.linkedin.com/in/Pawel-Kica/" target="_blank"><img alt="Linkedin" src="https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white" />
+   <a href="mailto: pawel.kica.cc@proton.me" target="_blank"><img alt="Protonmail" src="https://img.shields.io/badge/ProtonMail-8B89CC?style=for-the-badge&logo=protonmail&logoColor=white" />
+   </a> 
+   </p>
+</div>
 
