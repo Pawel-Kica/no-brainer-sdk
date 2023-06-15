@@ -137,8 +137,11 @@ export async function generateFunctions(operationType: 'mutation' | 'query', enu
         const functionString = `async ${field.name}({${readyToUseArgs.length ? 'args,' : ''} ${
             allowFields ? 'fields, ' : ''
         } headers}:{${readyToUseArgs.length ? `args${ifArgsRequired ? '' : '?'}: ${argObjectName},` : ''} ${
-            allowFields ? `fields:Partial<Record<keyof ${returnName},boolean>>[],` : ''
+            allowFields
+                ? `fields:((keyof ${returnName.replace('[]', '')}) | Partial<Record<keyof ${returnName},any[]>>)[],`
+                : ''
         } headers?:HeadersInit}${!readyToUseArgs.length && !allowFields ? '={}' : ''}):Promise<${returnName}>{ 
+            if(!headers) headers = {};
             return this.gql_request(gql\`
                 ${operationType}${argsFormatter(gqlArgs)} {
                     ${field.name}${argsFormatter(readyToUseArgs.map((e) => `${e[0]}:$${e[0]}`).join(','))}
@@ -150,7 +153,7 @@ export async function generateFunctions(operationType: 'mutation' | 'query', enu
                                 : ''
                         }
                 }
-                \`,${readyToUseArgs.length ? 'args || {}' : '{}'},headers || {},'${field.name}')
+                \`,${readyToUseArgs.length ? 'args || {}' : '{}'},headers,'${field.name}')
                 }\n\n`;
 
         functions += functionString;
