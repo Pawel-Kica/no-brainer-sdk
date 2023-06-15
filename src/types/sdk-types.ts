@@ -1,4 +1,5 @@
 import {gql, GraphQLClient, RequestDocument, Variables} from 'graphql-request';
+import {PatchedRequestInit} from 'graphql-request/dist/types';
 
 export enum CriticalTaskStatus {
     win = 'win',
@@ -183,8 +184,8 @@ export class SdkClient {
     private gql_client: GraphQLClient;
     private global_headers: {[x: string]: string} = {};
 
-    constructor(endpoint: string) {
-        this.gql_client = new GraphQLClient(endpoint);
+    constructor(endpoint: string, options?: PatchedRequestInit) {
+        this.gql_client = new GraphQLClient(endpoint, options);
     }
 
     setGlobalCustomHeader(header_name: string, value: any): void {
@@ -208,10 +209,9 @@ export class SdkClient {
         headers,
     }: {
         args: CreateCriticalTaskArgs;
-        fields: (keyof CriticalTask | Partial<Record<keyof CriticalTask, any[]>>)[];
+        fields: Partial<Record<keyof CriticalTask, boolean>>[];
         headers?: HeadersInit;
     }): Promise<CriticalTask> {
-        if (!headers) headers = {};
         return this.gql_request(
             gql`
                 mutation($title: String!,$date: String!) {
@@ -222,7 +222,7 @@ export class SdkClient {
                 }
                 `,
             args || {},
-            headers,
+            headers || {},
             'create_critical_task',
         );
     }
@@ -233,10 +233,9 @@ export class SdkClient {
         headers,
     }: {
         args: UpdateCriticalTaskArgs;
-        fields: (keyof CriticalTask | Partial<Record<keyof CriticalTask, any[]>>)[];
+        fields: Partial<Record<keyof CriticalTask, boolean>>[];
         headers?: HeadersInit;
     }): Promise<CriticalTask> {
-        if (!headers) headers = {};
         return this.gql_request(
             gql`
                 mutation($id: String!,$title: String,$status: CriticalTaskStatus) {
@@ -247,7 +246,7 @@ export class SdkClient {
                 }
                 `,
             args || {},
-            headers,
+            headers || {},
             'update_critical_task',
         );
     }
@@ -256,10 +255,9 @@ export class SdkClient {
         fields,
         headers,
     }: {
-        fields: (keyof User | Partial<Record<keyof User, any[]>>)[];
+        fields: Partial<Record<keyof User, boolean>>[];
         headers?: HeadersInit;
     }): Promise<User> {
-        if (!headers) headers = {};
         return this.gql_request(
             gql`
                 query {
@@ -270,7 +268,7 @@ export class SdkClient {
                 }
                 `,
             {},
-            headers,
+            headers || {},
             'user',
         );
     }
@@ -281,10 +279,9 @@ export class SdkClient {
         headers,
     }: {
         args: UserPowerListArgs;
-        fields: (keyof PowerListResult | Partial<Record<keyof PowerListResult, any[]>>)[];
+        fields: Partial<Record<keyof PowerListResult, boolean>>[];
         headers?: HeadersInit;
     }): Promise<PowerListResult> {
-        if (!headers) headers = {};
         return this.gql_request(
             gql`
                 query($date: String!) {
@@ -295,7 +292,7 @@ export class SdkClient {
                 }
                 `,
             args || {},
-            headers,
+            headers || {},
             'user_power_list',
         );
     }
