@@ -1,5 +1,6 @@
+//@ts-nocheck
 import {gql, GraphQLClient, RequestDocument, Variables} from 'graphql-request';
-import {PatchedRequestInit} from 'graphql-request/dist/types';
+import {RequestConfig} from 'graphql-request/build/esm/types';
 
 export enum CriticalTaskStatus {
     win = 'win',
@@ -184,7 +185,7 @@ export class SdkClient {
     private gql_client: GraphQLClient;
     private global_headers: {[x: string]: string} = {};
 
-    constructor(endpoint: string, options?: PatchedRequestInit) {
+    constructor(endpoint: string, options?: RequestConfig | undefined) {
         this.gql_client = new GraphQLClient(endpoint, options);
     }
 

@@ -54,7 +54,7 @@ export async function generateTypes(client: GraphQLClient) {
             }
         }
     `;
-    const res = await client.request(query);
+    const res: any = await client.request(query);
     let {types} = res.__schema;
     let parents = ``;
     let enums = ``;

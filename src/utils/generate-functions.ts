@@ -75,7 +75,7 @@ export async function generateFunctions(operationType: 'mutation' | 'query', enu
             }
         }
     `;
-    const res = await client.request(query);
+    const res: any = await client.request(query);
 
     let {fields} = res.__schema[operationType + 'Type'];
 

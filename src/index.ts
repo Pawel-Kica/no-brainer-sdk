@@ -21,8 +21,9 @@ async function compileAll() {
     const mutations = await generateFunctions('mutation', enums, client);
     const queries = await generateFunctions('query', enums, client);
 
-    const imports = `import { gql, GraphQLClient, RequestDocument, Variables } from 'graphql-request';
-         import { PatchedRequestInit } from 'graphql-request/dist/types'\n`;
+    const imports = `//@ts-nocheck
+    import { gql, GraphQLClient, RequestDocument, Variables } from 'graphql-request';
+    import {RequestConfig} from 'graphql-request/build/esm/types'\n`;
 
     const classWrapper = ` 
         export function buildGraphQLQuery(fields) {
@@ -43,7 +44,7 @@ async function compileAll() {
         private gql_client: GraphQLClient;
         private global_headers: {[x: string]: string} = {};
 
-        constructor(endpoint: string, options?: PatchedRequestInit) {
+        constructor(endpoint: string, options?: RequestConfig | undefined) {
             this.gql_client = new GraphQLClient(endpoint,options);
         }
 

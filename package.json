@@ -27,7 +27,7 @@
     "dist"
   ],
   "dependencies": {
-    "graphql-request": "^4.3.0"
+    "graphql-request": "^6.1.0"
   },
   "repository": {
     "type": "git"
