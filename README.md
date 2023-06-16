@@ -53,17 +53,28 @@ In this example, the generated SDK allows you to perform GraphQL queries and mut
 It's just an example, of what structures SDK generates
 
 ```typescript
-export type QueryType = 'user' | 'user_power_list';
-
-export type MutationType = 'create_critical_task' | 'update_critical_task';
-
 export const SdkClientInstance = new SdkClient('http://localhost:3001/graphql');
 
+// Interfaces
+export interface User {
+    created_at: string;
+    user_id: string;
+    email: string;
+    sessions: Session[];
+    critical_tasks: CriticalTask[];
+}
+
+// Enums
 export enum CriticalTaskStatus {
     win = 'win',
     lose = 'lose',
     in_progress = 'in_progress',
 }
+
+// Query & Mutations types!
+export type QueryType = 'user' | 'user_power_list';
+
+export type MutationType = 'create_critical_task' | 'update_critical_task';
 
 export enum QueryEnum {
     user = 'user',
@@ -75,11 +86,6 @@ export enum MutationEnum {
     update_critical_task = 'update_critical_task',
 }
 
-export type QueryType = 'user' | 'user_power_list';
-
-export type MutationType = 'create_critical_task' | 'update_critical_task';
-
-export const SdkClientInstance = new SdkClient('http://localhost:3001/graphql');
 ```
 
 ## Enjoy 🚀🚀🚀
