@@ -1,6 +1,6 @@
 {
   "name": "no-brainer-sdk",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "No Brainer SDK",
   "main": "./dist/index.js",
   "scripts": {
