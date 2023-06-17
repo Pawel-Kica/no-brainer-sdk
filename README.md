@@ -7,10 +7,16 @@ The No-Brainer SDK Builder is a tool that generates an SDK based on a GraphQL sc
 To use the No-Brainer SDK Builder, run the following command to:
 
 ```
-npx no-brainer-sdk http://localhost:3001/graphql ./src/types/sdk-types.ts
+npx no-brainer-sdk@latest http://localhost:3001/graphql ./src/types/sdk-types.ts
 ```
 
 This command will generate the SDK based on the provided GraphQL schema and output it to the specified TypeScript file (`sdk-types.ts` in this case).
+
+
+**At your first installation, remember to install graphql-request as well**
+```
+npm i graphql-request@6.1.0
+```
 
 ## Usage Example
 

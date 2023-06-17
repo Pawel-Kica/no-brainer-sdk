@@ -30,6 +30,7 @@
     "graphql-request": "^6.1.0"
   },
   "repository": {
-    "type": "git"
+    "type": "git",
+    "url": "git+https://github.com/Pawel-Kica/no-brainer-sdk"
   }
 }
