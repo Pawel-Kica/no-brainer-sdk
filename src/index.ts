@@ -21,7 +21,7 @@ async function compileAll() {
     const mutations = await generateFunctions('mutation', enums, client);
     const queries = await generateFunctions('query', enums, client);
 
-    const imports = `//@ts-nocheck
+    const imports = `////@ts-nocheck
     import { gql, GraphQLClient, RequestDocument, Variables } from 'graphql-request';
     import {RequestConfig} from 'graphql-request/build/esm/types'\n`;
 
@@ -56,7 +56,7 @@ async function compileAll() {
             this.global_headers['authorization'] = \`Bearer \${token}\`;
         }
 
-        async gql_request(document: RequestDocument, variables?: Variables, requestHeaders?: HeadersInit, name?: string) {
+        async gql_request(document: RequestDocument, variables?: any, requestHeaders?: HeadersInit, name?: string) {
             return this.gql_client.request(document, variables, {...this.global_headers, ...requestHeaders}).then((res) => {
                 if (name) return res[name];
                 return res;
