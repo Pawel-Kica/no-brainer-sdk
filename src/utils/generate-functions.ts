@@ -138,7 +138,10 @@ export async function generateFunctions(operationType: 'mutation' | 'query', enu
             allowFields ? 'fields, ' : ''
         } headers}:{${readyToUseArgs.length ? `args${ifArgsRequired ? '' : '?'}: ${argObjectName},` : ''} ${
             allowFields
-                ? `fields:((keyof ${returnName.replace('[]', '')}) | Partial<Record<keyof ${returnName},any[]>>)[],`
+                ? `fields:((keyof ${returnName.replace('[]', '')}) | Partial<Record<keyof ${returnName.replace(
+                      '[]',
+                      '',
+                  )},any[]>>)[],`
                 : ''
         } headers?:HeadersInit}${!readyToUseArgs.length && !allowFields ? '={}' : ''}):Promise<${returnName}>{ 
             if(!headers) headers = {};
