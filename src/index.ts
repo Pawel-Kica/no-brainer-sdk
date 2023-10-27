@@ -25,8 +25,8 @@ async function compileAll() {
     import { gql, GraphQLClient, RequestDocument, Variables } from 'graphql-request';\n`;
 
     const classWrapper = ` 
-        export function buildGraphQLQuery(fields) {
-            const queryFields = fields.map((field) => {
+        export function buildGraphQLQuery(fields:any) {
+            const queryFields = fields.map((field:any) => {
                 if (typeof field === 'string') {
                     return field;
                 } else if (typeof field === 'object') {
