@@ -8,11 +8,20 @@ export function handleSpecificKindHandler(
     depth++;
     const handleNext = () => {
         handleSpecificKindHandler(
-            {...input.ofType, fieldName: input.fieldName, parentKinds: [...input.parentKinds, input.kind]},
+            {
+                ...input.ofType,
+                fieldName: input.fieldName,
+                defaultValue: input.defaultValue,
+                parentKinds: [...input.parentKinds, input.kind],
+            },
             depth,
             parentString,
         );
     };
+
+    // if (JSON.stringify(input).includes('limit')) {
+    //     console.log(input, 'input');
+    // }
 
     switch (input.kind) {
         case ITypeKind.ENUM:
@@ -27,11 +36,13 @@ export function handleSpecificKindHandler(
         case ITypeKind.OBJECT:
             if (depth === 0) {
                 for (const field of input.fields) {
-                    handleSpecificKindHandler(
-                        {...field.type, fieldName: field.name, parentKinds: []},
-                        depth,
-                        parentString,
-                    );
+                    const payload = {
+                        ...field.type,
+                        fieldName: field.name,
+                        parentKinds: [],
+                        defaultValue: field.defaultValue,
+                    };
+                    handleSpecificKindHandler(payload, depth, parentString);
                 }
             } else {
                 input.kind = ITypeKind.SCALAR;
@@ -56,12 +67,15 @@ export function handleSpecificKindHandler(
             handleNext();
             break;
         case ITypeKind.SCALAR:
+            // if (input.fieldName === 'limit') {
+            //     console.log(input, 'LIMIIIT');
+            // }
             if (parentString.customProps) {
                 parentString.customProps[input.fieldName || input.name] = input.name;
             }
             let name = `${input.fieldName || input.name}`;
             let value = KindMapperHandler(input);
-            if (!input.parentKinds.includes(ITypeKind.NON_NULL)) {
+            if (!input.parentKinds.includes(ITypeKind.NON_NULL) || input.defaultValue) {
                 name += '?';
             }
             if (input.parentKinds.includes(ITypeKind.LIST)) {

@@ -197,11 +197,18 @@ export class SdkClient {
         this.global_headers['authorization'] = `Bearer ${token}`;
     }
 
-    async gql_request(document: RequestDocument, variables?: Variables, requestHeaders?: HeadersInit, name?: string) {
-        return this.gql_client.request(document, variables, {...this.global_headers, ...requestHeaders}).then((res) => {
-            if (name) return res[name];
-            return res;
-        });
+    async gql_request(
+        document: RequestDocument,
+        variables?: Variables,
+        requestHeaders?: HeadersInit,
+        name?: string,
+    ) {
+        return this.gql_client
+            .request(document, variables, {...this.global_headers, ...requestHeaders})
+            .then((res) => {
+                if (name) return res[name];
+                return res;
+            });
     }
 
     async create_critical_task({

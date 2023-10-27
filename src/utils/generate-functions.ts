@@ -11,7 +11,11 @@ const createArgsName = (name: string) => {
     );
 };
 
-export async function generateFunctions(operationType: 'mutation' | 'query', enums: string, client: GraphQLClient) {
+export async function generateFunctions(
+    operationType: 'mutation' | 'query',
+    enums: string,
+    client: GraphQLClient,
+) {
     const query = gql`
         query {
             __schema {
@@ -45,6 +49,7 @@ export async function generateFunctions(operationType: 'mutation' | 'query', enu
                         }
                         args {
                             name
+                            defaultValue
                             type {
                                 kind
                                 name
@@ -85,14 +90,26 @@ export async function generateFunctions(operationType: 'mutation' | 'query', enu
     for (const field of fields) {
         let depth = -1;
 
+        if (field.name === 'instruments') {
+            console.log(field, 'tu');
+        }
+
         const argObjectName = createArgsName(field.name);
 
         const argParent = {name: `export interface ${argObjectName}{`, customProps: {}};
 
-        handleSpecificKindHandler({fields: field.args, kind: ITypeKind.OBJECT} as any, depth, argParent);
+        handleSpecificKindHandler(
+            {fields: field.args, kind: ITypeKind.OBJECT} as any,
+            depth,
+            argParent,
+        );
+        if (field.name === 'instruments') {
+            console.log(argParent);
+        }
         args = args + argParent.name + '\n}\n\n';
 
-        const ifArgsRequired = countOccurrences(argParent.name, ':') !== countOccurrences(argParent.name, '?');
+        const ifArgsRequired =
+            countOccurrences(argParent.name, ':') !== countOccurrences(argParent.name, '?');
 
         const readyToUseArgs = argParent.name
             .split('\n')
@@ -136,18 +153,24 @@ export async function generateFunctions(operationType: 'mutation' | 'query', enu
 
         const functionString = `async ${field.name}({${readyToUseArgs.length ? 'args,' : ''} ${
             allowFields ? 'fields, ' : ''
-        } headers}:{${readyToUseArgs.length ? `args${ifArgsRequired ? '' : '?'}: ${argObjectName},` : ''} ${
+        } headers}:{${
+            readyToUseArgs.length ? `args${ifArgsRequired ? '' : '?'}: ${argObjectName},` : ''
+        } ${
             allowFields
-                ? `fields:((keyof ${returnName.replace('[]', '')}) | Partial<Record<keyof ${returnName.replace(
+                ? `fields:((keyof ${returnName.replace(
                       '[]',
                       '',
-                  )},any[]>>)[],`
+                  )}) | Partial<Record<keyof ${returnName.replace('[]', '')},any[]>>)[],`
                 : ''
-        } headers?:HeadersInit}${!readyToUseArgs.length && !allowFields ? '={}' : ''}):Promise<${returnName}>{ 
+        } headers?:HeadersInit}${
+            !readyToUseArgs.length && !allowFields ? '={}' : ''
+        }):Promise<${returnName}>{ 
             if(!headers) headers = {};
             return this.gql_request(gql\`
                 ${operationType}${argsFormatter(gqlArgs)} {
-                    ${field.name}${argsFormatter(readyToUseArgs.map((e) => `${e[0]}:$${e[0]}`).join(','))}
+                    ${field.name}${argsFormatter(
+            readyToUseArgs.map((e) => `${e[0]}:$${e[0]}`).join(','),
+        )}
                         ${
                             allowFields
                                 ? `{

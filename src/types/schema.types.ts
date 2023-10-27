@@ -88,6 +88,7 @@ export interface __Type {
     inputFields?: [__InputValue];
     ofType: __Type;
     custom_props: Record<string, any>;
+    defaultValue: any;
 }
 
 export const schemaString = `
@@ -119,6 +120,7 @@ export interface __Field {
     type: __Type;
     isDeprecated: boolean;
     deprecationReason?: string;
+    defaultValue: any;
 }
 
 export const KindMapper = {
