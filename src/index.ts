@@ -22,8 +22,7 @@ async function compileAll() {
     const queries = await generateFunctions('query', enums, client);
 
     const imports = `////@ts-nocheck
-    import { gql, GraphQLClient, RequestDocument, Variables } from 'graphql-request';
-    import {RequestConfig} from 'graphql-request/build/esm/types'\n`;
+    import { gql, GraphQLClient, RequestDocument, Variables } from 'graphql-request';\n`;
 
     const classWrapper = ` 
         export function buildGraphQLQuery(fields) {
@@ -44,7 +43,7 @@ async function compileAll() {
         private gql_client: GraphQLClient;
         private global_headers: {[x: string]: string} = {};
 
-        constructor(endpoint: string, options?: RequestConfig | undefined) {
+        constructor(endpoint: string, options?: any | undefined) {
             this.gql_client = new GraphQLClient(endpoint,options);
         }
 
@@ -72,7 +71,10 @@ async function compileAll() {
     `;
 
     mkdirSync(dirname(destinationPath), {recursive: true});
-    await writeFile(destinationPath, [imports, enums, parents, mutations.args, queries.args, classWrapper].join('\n'));
+    await writeFile(
+        destinationPath,
+        [imports, enums, parents, mutations.args, queries.args, classWrapper].join('\n'),
+    );
 
     if (destinationPath.startsWith('./')) destinationPath = destinationPath.slice(2); // remove leading ./
     console.log('Types compiled, absolute path: ' + process.cwd() + '/' + destinationPath);
