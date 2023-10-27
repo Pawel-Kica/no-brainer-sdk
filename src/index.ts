@@ -57,6 +57,7 @@ async function compileAll() {
 
         async gql_request(document: RequestDocument, variables?: any, requestHeaders?: HeadersInit, name?: string) {
             return this.gql_client.request(document, variables, {...this.global_headers, ...requestHeaders}).then((res) => {
+                //@ts-ignore
                 if (name) return res[name];
                 return res;
             });
