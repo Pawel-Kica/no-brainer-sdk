@@ -137,14 +137,14 @@ export const KindMapper2 = {
     Boolean: 'boolean',
 };
 
-export function KindMapperHandler(type: __Type) {
-    if (Object.keys(KindMapper).includes(type.name as any)) {
-        return KindMapper[type.name as any];
+export function KindMapperHandler(input: __Type) {
+    if (Object.keys(KindMapper).includes(input.name as any)) {
+        return KindMapper[input.name as any];
     }
-    if (Object.keys(KindMapper2).includes(type.name as any)) {
-        return KindMapper2[type.name as any];
+    if (Object.keys(KindMapper2).includes(input.name as any)) {
+        return KindMapper2[input.name as any];
     }
-    return type.name;
+    return input.name;
 }
 
 export enum ITypeKind {

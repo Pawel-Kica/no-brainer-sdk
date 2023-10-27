@@ -19,10 +19,6 @@ export function handleSpecificKindHandler(
         );
     };
 
-    // if (JSON.stringify(input).includes('limit')) {
-    //     console.log(input, 'input');
-    // }
-
     switch (input.kind) {
         case ITypeKind.ENUM:
             if (depth === 0) {
@@ -58,6 +54,13 @@ export function handleSpecificKindHandler(
                         parentString,
                     );
                 }
+            } else {
+                input.kind = ITypeKind.SCALAR;
+                handleSpecificKindHandler(
+                    {...input, kind: ITypeKind.SCALAR, name: input.name},
+                    depth,
+                    parentString,
+                );
             }
             break;
         case ITypeKind.LIST:
@@ -67,9 +70,6 @@ export function handleSpecificKindHandler(
             handleNext();
             break;
         case ITypeKind.SCALAR:
-            // if (input.fieldName === 'limit') {
-            //     console.log(input, 'LIMIIIT');
-            // }
             if (parentString.customProps) {
                 parentString.customProps[input.fieldName || input.name] = input.name;
             }
@@ -82,6 +82,15 @@ export function handleSpecificKindHandler(
                 const count = input.parentKinds.filter((e) => e === ITypeKind.LIST).length;
                 const arrays = '[]'.repeat(count);
                 value = `${value}${arrays}`;
+                const graphqlValue =
+                    '['.repeat(count) + value.replace('[]', '') + '!]'.repeat(count);
+                if (parentString.customProps) {
+                    // value is string as followed = 'test[]'
+                    // it can have multiplied [] like 'test[][]'
+                    // convert it to graphql type, like [test] or [[test]]
+                    // @ts-ignore
+                    parentString.customProps[input.fieldName || input.name] = graphqlValue;
+                }
             }
             parentString.name += `\n${name}: ${value};`;
             break;

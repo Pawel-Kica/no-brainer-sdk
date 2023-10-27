@@ -90,10 +90,6 @@ export async function generateFunctions(
     for (const field of fields) {
         let depth = -1;
 
-        if (field.name === 'instruments') {
-            console.log(field, 'tu');
-        }
-
         const argObjectName = createArgsName(field.name);
 
         const argParent = {name: `export interface ${argObjectName}{`, customProps: {}};
@@ -103,9 +99,6 @@ export async function generateFunctions(
             depth,
             argParent,
         );
-        if (field.name === 'instruments') {
-            console.log(argParent);
-        }
         args = args + argParent.name + '\n}\n\n';
 
         const ifArgsRequired =
